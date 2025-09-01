@@ -51,3 +51,8 @@ RubyImageExampleProject
 # #{devcontainers_status}
 ruby:1-3.4-bullseye:running
 ```
+## About these examples
+
+These examples are designed to test the myriad of configurations that are possible with DevContainers. They are to help the tmux-devcontainers plugin works correctly across different setups, providing a consistent and reliable experience for developers using tmux with DevContainers.
+
+Examples test both a minmal configuration where only an image or simple Dokcer is provided, as well as more complex configurations using Docker Compose with multiple services i.e., a web application, a database, and a cache service.

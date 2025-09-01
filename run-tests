@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+
+echo "Running test suite ..."
+
+current_dir=$(pwd)
+
+for dir in */; do
+    if [[ -d "$dir" ]]; then
+        echo "Entering $dir"
+        cd "$dir"
+        echo -e "\033[0;37m$($TMUX_PLUGIN_MANAGER_PATH/tmux-devcontainers/scripts/statusbar/status.sh)\033[0m" # (cd "$dir" && pwd)
+        echo "---"
+    fi
+    cd "$current_dir"
+done
+
+echo "Finished test suite ..."

@@ -5,11 +5,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - database
-    ports:
-      - "3000:3000"
     volumes:
       - .:/app:delegated
-      - gem_cache:/usr/local/bundle/gems
   database:
     image: postgres:17.4
     volumes:
@@ -18,5 +15,4 @@ services:
       - POSTGRES_USER=dev_user
       - POSTGRES_PASSWORD=123456abcdef
 volumes:
-  gem_cache:
   db_data:

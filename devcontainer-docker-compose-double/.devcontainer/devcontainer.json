@@ -1,5 +1,5 @@
 {
-	"name": "DockerComposeSingleExampleProject",
+	"name": "DoubleComposeProject",
     "dockerComposeFile": [
         "../docker-compose.yml",
         "docker-compose.yml"
