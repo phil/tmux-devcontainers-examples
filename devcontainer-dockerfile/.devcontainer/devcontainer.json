@@ -1,0 +1,4 @@
+{
+	"name": "DockerFileExampleProject",
+	"dockerFile": "../Dockerfile"
+}

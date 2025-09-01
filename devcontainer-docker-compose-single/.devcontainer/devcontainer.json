@@ -1,0 +1,5 @@
+{
+	"name": "DockerComposeSingleExampleProject",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "app"
+}
