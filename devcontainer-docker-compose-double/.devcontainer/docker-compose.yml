@@ -1,6 +1,6 @@
 services:
   app:
-      command: /bin/sh -c "while sleep 1000; do :; done"
+    command: /bin/sh -c "while sleep 1000; do :; done"
 
   redis:
     image: redis:7.2.0
