@@ -3,12 +3,51 @@
 echo "Running test suite ..."
 
 current_dir=$(pwd)
+tmux_plugin_dir="$TMUX_PLUGIN_MANAGER_PATH/tmux-devcontainers/"
 
+assert_equal() {
+    local actual="$1"
+    local expected="$2"
+
+    if [ "$actual" != "$expected" ]; then
+        # echo "Assertion failed: '$1' != '$2'"
+        echo -e "\033[31mFAIL\033[0m"
+        echo -e "\033[31mEXPECTED: $expected\033[0m"
+        echo -e "\033[31mACTUAL:   $actual\033[0m"
+    else
+        echo -e "\033[32mPASS: $actual\033[0m"
+    fi
+}
+
+# Loop over each devcontainer example directory
 for dir in */; do
     if [[ -d "$dir" ]]; then
-        echo "Entering $dir"
+        echo "=> $dir"
         cd "$dir"
-        echo -e "\033[0;37m$($TMUX_PLUGIN_MANAGER_PATH/tmux-devcontainers/scripts/statusbar/status.sh)\033[0m" # (cd "$dir" && pwd)
+        # devcontainer up --workspace-folder .
+        workspace=$($tmux_plugin_dir/scripts/statusbar/workspace.sh)
+        status=$($tmux_plugin_dir//scripts/statusbar/status.sh)
+        case $dir in
+            "devcontainer-image/")
+                assert_equal "$workspace" "RubyImageExampleProject"
+                assert_equal "$status" "ruby:1-3.4-bullseye:running"
+                ;;
+            "devcontainer-dockerfile/")
+                assert_equal "$workspace" "DockerFileExampleProject"
+                assert_equal "$status" "Dockerfile:running"
+                ;;
+            "devcontainer-docker-compose-single/")
+                assert_equal "$workspace" "SingleComposeProject"
+                assert_equal "$status" "app:running database:running"
+                ;;
+            "devcontainer-docker-compose-multiple/")
+                assert_equal "$workspace" "MultiComposeProject"
+                assert_equal "$status" "app:running database:running redis:running"
+                ;;
+            *)
+                ;;
+        esac
+
         echo "---"
     fi
     cd "$current_dir"
