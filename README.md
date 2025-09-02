@@ -4,6 +4,13 @@ A repository of examples for testing tmux-devcontainers plugin
 
 With DevContainers, there are four main types of configurations you can use to set up your development environment. For the tmux-devcontainers plugin, we have created example projects to test the status bar and menu functionalities for each configuration type.
 
+## Expected States
+
+The status should display the status of the container, taken from the docker ps status field https://docs.docker.com/reference/cli/docker/container/ls/#status
+
+if a container have never been started, it should show "unknown"
+
+
 ## Docker Compose (single)
 
 For single compose setup, we expect the status to show each service and its status.
