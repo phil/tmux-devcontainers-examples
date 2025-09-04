@@ -27,16 +27,17 @@ assert_equal() {
 }
 
 for dir in */; do
-    # Only run the image test
-    if [[ "$dir" != "devcontainer-docker-compose-single/" ]]; then
-        continue
-    fi
+    # Only run a single test
+    # if [[ "$dir" != "devcontainer-docker-compose-multi/" ]]; then
+    #     continue
+    # fi
 
     if [[ -d "$dir" ]]; then
         echo "=> $dir"
         cd "$dir"
         workspace=$($tmux_plugin_dir/scripts/statusbar/workspace.sh)
 
+        # Ensure a clean state
         test_purge
 
         status=$($tmux_plugin_dir/scripts/statusbar/status.sh)
@@ -50,7 +51,7 @@ for dir in */; do
             "devcontainer-docker-compose-single/")
                 assert_equal "$workspace" "SingleComposeProject"
                 assert_equal "$status" "app:unknown database:unknown" ;;
-            "devcontainer-docker-compose-multiple/")
+            "devcontainer-docker-compose-multi/")
                 assert_equal "$workspace" "MultiComposeProject"
                 assert_equal "$status" "app:unknown database:unknown redis:unknown" ;;
         esac
@@ -65,11 +66,13 @@ for dir in */; do
                 assert_equal "$status" "Dockerfile:running" ;;
             "devcontainer-docker-compose-single/")
                 assert_equal "$status" "app:running database:running" ;;
-            "devcontainer-docker-compose-multiple/")
+            "devcontainer-docker-compose-multi/")
                 assert_equal "$status" "app:running database:running redis:running" ;;
         esac
 
         test_down
+
+        # Image based containers exit, compose based containers stop and are removed
 
         status=$($tmux_plugin_dir//scripts/statusbar/status.sh)
         case $dir in
@@ -79,7 +82,7 @@ for dir in */; do
                 assert_equal "$status" "Dockerfile:exited" ;;
             "devcontainer-docker-compose-single/")
                 assert_equal "$status" "app:exited database:exited" ;;
-            "devcontainer-docker-compose-multiple/")
+            "devcontainer-docker-compose-multi/")
                 assert_equal "$status" "app:exited database:exited redis:exited" ;;
         esac
 
@@ -93,11 +96,9 @@ for dir in */; do
                 assert_equal "$status" "Dockerfile:unknown" ;;
             "devcontainer-docker-compose-single/")
                 assert_equal "$status" "app:unknown database:unknown" ;;
-            "devcontainer-docker-compose-multiple/")
+            "devcontainer-docker-compose-multi/")
                 assert_equal "$status" "app:unknown database:unknown redis:unknown" ;;
         esac
-
-        # run_purge
 
         echo "---"
     fi
@@ -105,15 +106,22 @@ for dir in */; do
 done
 
 echo -e "\033[37mTests passed: ${#tests_passed[@]}\033[0m"
-    for test in "${tests_passed[@]}"; do
-        echo -e "\033[32m  - $test\033[0m"
-    done
-    echo -e "\033[37mTests failed: ${#tests_failed[@]}\033[0m"
-        for test in "${tests_failed[@]}"; do
-            echo -e "\033[31m  - $test\033[0m"
-        done
+for test in "${tests_passed[@]}"; do
+    echo -e "\033[32m$test\033[0m"
+done
 
-        echo "---"
-        echo "Remember to check for zombie bash processes ..."
-        echo "---"
-        echo "Finished test suite ..."
+echo -e "\033[37mTests failed: ${#tests_failed[@]}\033[0m"
+
+for test in "${tests_failed[@]}"; do
+    echo -e "\033[31m$test\033[0m"
+done
+
+echo "---"
+echo "Remember to check for zombie bash processes ..."
+echo "---"
+echo "Finished test suite ..."
+
+if [ ${#tests_failed[@]} -ne 0 ]; then
+    exit 1
+fi
+
