@@ -28,7 +28,7 @@ assert_equal() {
 
 for dir in */; do
     # Only run a single test
-    # if [[ "$dir" != "devcontainer-docker-compose-multi/" ]]; then
+    # if [[ "$dir" != "devcontainer-image/" ]]; then
     #     continue
     # fi
 
@@ -38,7 +38,7 @@ for dir in */; do
         workspace=$($tmux_plugin_dir/scripts/statusbar/workspace.sh)
 
         # Ensure a clean state
-        test_purge
+        test_down
 
         status=$($tmux_plugin_dir/scripts/statusbar/status.sh)
         case $dir in
@@ -70,7 +70,7 @@ for dir in */; do
                 assert_equal "$status" "app:running database:running redis:running" ;;
         esac
 
-        test_down
+        test_stop
 
         # Image based containers exit, compose based containers stop and are removed
 
@@ -86,7 +86,7 @@ for dir in */; do
                 assert_equal "$status" "app:exited database:exited redis:exited" ;;
         esac
 
-        test_purge
+        test_down
 
         status=$($tmux_plugin_dir/scripts/statusbar/status.sh)
         case $dir in
